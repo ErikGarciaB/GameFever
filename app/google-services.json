@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "181948374367",
+    "project_id": "gamefever-2ad07",
+    "storage_bucket": "gamefever-2ad07.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181948374367:android:9ac0793a461a085fd4aaea",
+        "android_client_info": {
+          "package_name": "net.iessochoa.erikgarciabelen.gamefever"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181948374367-ml3bgkhkvcc7tmil9uh1g7qeb87mf3ec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFkraghfxkGVB6l3luY9sUKVBECI7zC5c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181948374367-ml3bgkhkvcc7tmil9uh1g7qeb87mf3ec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
