@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +29,9 @@ public class LoggingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_logging);
         initializeComponents();
 
+        if (auth.getCurrentUser() != null)
+            initializeMainApp();
+
         btIniciarSesion.setOnClickListener(v -> {
             String email, password;
 
@@ -42,10 +44,7 @@ public class LoggingActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    String message = String.format(getResources().getString(R.string.welcome_message), auth.getCurrentUser().getDisplayName());
-                                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-                                    Intent intent = new Intent(LoggingActivity.this, MainActivity.class);
-                                    startActivity(intent);
+                                    initializeMainApp();
                                 } else {
                                     tvAviso.setVisibility(View.VISIBLE);
                                 }
@@ -57,6 +56,11 @@ public class LoggingActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegistingActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void initializeMainApp(){
+        Intent intent = new Intent(LoggingActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void initializeComponents() {
