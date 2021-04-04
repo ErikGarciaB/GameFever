@@ -4,4 +4,22 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_lobby">MainActivity</string>
+
+    <string name="gameFever">GameFever</string>
+    <string name="email">Correo Electronico</string>
+    <string name="password">Contraseña</string>
+    <string name="name">Nombre</string>
+
+
+    <string name="logging">Iniciar sesión</string>
+    <string name="register">Registrar Cuenta</string>
+    <string name="no_account">¿No tienes cuenta? Crear Cuenta</string>
+    <string name="have_account">¿Ya tienes cuenta? Iniciar sesión</string>
+
+    <string name="no_mail">Rellene el correo</string>
+    <string name="no_name">Rellene el nombre</string>
+    <string name="no_password">Rellene la contraseña</string>
+    <string name="incorrect_error">El correo o la contraseña no coincide</string>
+
+    <string name="welcome_message">Bienvenido %1$s</string>
 </resources>
