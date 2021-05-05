@@ -1,4 +1,4 @@
-package net.iessochoa.erikgarciabelen.gamefever.ui.home;
+package net.iessochoa.erikgarciabelen.gamefever.ui.games;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,16 +14,16 @@ import androidx.lifecycle.ViewModelProvider;
 
 import net.iessochoa.erikgarciabelen.gamefever.R;
 
-public class HomeFragment extends Fragment {
+public class GamesFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
+    private GamesViewModel gamesViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        gamesViewModel = new ViewModelProvider(this).get(GamesViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_games, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        gamesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

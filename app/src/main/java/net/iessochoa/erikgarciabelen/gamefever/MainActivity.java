@@ -9,6 +9,15 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import net.iessochoa.erikgarciabelen.gamefever.model.FirebaseContract;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,4 +36,18 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (user != null){
+            Timestamp actualTime = Timestamp.now();
+            Map<String, Object> lastTimeConnected = new HashMap<>();
+            lastTimeConnected.put(FirebaseContract.UserEntry.LAST_TIME_CONNECTED, actualTime);
+            db.collection(FirebaseContract.UserEntry.COLLECTION_NAME).document(user.getDisplayName()).update(lastTimeConnected);
+        }
+    }
 }

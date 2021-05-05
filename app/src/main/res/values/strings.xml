@@ -2,25 +2,51 @@
     <string name="app_name">GameFever</string>
     <string name="title_activity_lobby">MainActivity</string>
 
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="return_">Volver</string>
+
     <string name="title_game">Juegos</string>
     <string name="title_friends">Amigos</string>
     <string name="title_options">Opciones</string>
+    <string name="sign_out">Cerrar Sesión</string>
+    <string name="history">Historial</string>
 
     <string name="gameFever">GameFever</string>
     <string name="email">Correo Electronico</string>
     <string name="password">Contraseña</string>
     <string name="name">Nombre</string>
 
+    <string name="search_friends"><u>Buscar amigos</u></string>
+    <string name="search_friends_noUnderline">Buscar amigos</string>
+    <string name="number_invitations">%1$d Solicitudes</string>
+    <string name="invitations">Solicitudes</string>
+    <string name="empty_invitations">_ Solicitudes</string>
+    <string name="already_invited">Invitado</string>
+    <string name="user_is_invited">En solicitud</string>
+    <string name="user_is_you">--Este eres tu--</string>
+    <string name="user_is_friend">Ya es amigo</string>
+
+
+    <string name="accept">Aceptar</string>
+    <string name="deny">Denegar</string>
+    <string name="invitation_denied">Invitación rechazada</string>
+    <string name="invitation_accepted">Invitación aceptada</string>
+
 
     <string name="logging">Iniciar sesión</string>
     <string name="register">Registrar Cuenta</string>
-    <string name="no_account">¿No tienes cuenta? Crear Cuenta</string>
-    <string name="have_account">¿Ya tienes cuenta? Iniciar sesión</string>
+    <string name="no_account"><u>¿No tienes cuenta? Crear Cuenta</u></string>
+    <string name="have_account"><u>¿Ya tienes cuenta? Iniciar sesión</u></string>
 
     <string name="no_mail">Rellene el correo</string>
     <string name="no_name">Rellene el nombre</string>
     <string name="no_password">Rellene la contraseña</string>
     <string name="incorrect_error">El correo o la contraseña no coincide</string>
+    <string name="invalid_name">El nombre esta en uso. Prueba otro nombre.</string>
+
+    <string name="confirm_title">Solicitud</string>
+    <string name="confirm_invitation">¿Deseas enviar una solicitud a %1$s?</string>
 
     <string name="welcome_message">Bienvenido %1$s</string>
 </resources>

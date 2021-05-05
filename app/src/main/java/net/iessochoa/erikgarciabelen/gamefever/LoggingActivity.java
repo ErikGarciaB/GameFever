@@ -16,23 +16,32 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class LoggingActivity extends AppCompatActivity {
+public class LoggingActivity extends AppCompatActivity{
 
     private EditText etLoginName, etLoginPassword;
-    private TextView tvAviso, tvNoAccount;
-    private Button btIniciarSesion;
+    private TextView tvLoginAlert, tvNoAccount;
+    private Button btLogin;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
+
+    /**
+     * Initialize the activity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging);
+        // Initialize the components
         initializeComponents();
 
+        // If firebase has a user, skip the login screen.
         if (auth.getCurrentUser() != null)
             initializeMainApp();
 
-        btIniciarSesion.setOnClickListener(v -> {
+        // When the login button is pressed, the app check if the name and password fields
+        // are filled. If they are filled, firebase try to log the user.
+        btLogin.setOnClickListener(v -> {
             String email, password;
 
 
@@ -46,30 +55,43 @@ public class LoggingActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     initializeMainApp();
                                 } else {
-                                    tvAviso.setVisibility(View.VISIBLE);
+                                    tvLoginAlert.setVisibility(View.VISIBLE);
                                 }
                             }
                         });
             }
         });
+        // When the No Account button is pressed, the RegistingActivity is created and started.
         tvNoAccount.setOnClickListener(v -> {
             Intent intent = new Intent(this, RegistingActivity.class);
             startActivity(intent);
         });
     }
 
+    /**
+     * Create and start the MainAppActivity
+     */
     private void initializeMainApp(){
         Intent intent = new Intent(LoggingActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Initialize the component of the view
+     */
+
     private void initializeComponents() {
         etLoginName = findViewById(R.id.etLoginMail);
         etLoginPassword = findViewById(R.id.etLoginPassword);
-        btIniciarSesion = findViewById(R.id.btIniciarSesion);
-        tvAviso = findViewById(R.id.tvAviso);
+        btLogin = findViewById(R.id.btLogin);
+        tvLoginAlert = findViewById(R.id.tvLoginAlert);
         tvNoAccount = findViewById(R.id.tvNoAccount);
     }
+
+    /**
+     * Check if username and password fields are empty.
+     * @return false if one of them is empty. Return true if they are filled.
+     */
 
     private boolean checkFields() {
         boolean bool = true;
@@ -83,5 +105,6 @@ public class LoggingActivity extends AppCompatActivity {
         }
         return bool;
     }
+
 
 }

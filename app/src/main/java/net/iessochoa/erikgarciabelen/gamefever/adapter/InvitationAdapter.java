@@ -1,0 +1,91 @@
+package net.iessochoa.erikgarciabelen.gamefever.adapter;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import net.iessochoa.erikgarciabelen.gamefever.R;
+import net.iessochoa.erikgarciabelen.gamefever.model.Invitation;
+
+import java.util.ArrayList;
+
+public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.InvitationViewHolder> {
+    private ArrayList<Invitation> invitationList;
+    private OnItemClickAcceptListener listenerAccept;
+    private OnItemClickDenyListener listenerDeny;
+
+
+    @Override
+    public InvitationAdapter.InvitationViewHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType){
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_invitations, parent, false);
+        return new InvitationViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull InvitationViewHolder holder, int position) {
+        if (invitationList != null){
+            Invitation invitation = invitationList.get(position);
+            holder.tvName.setText(invitation.getHostUser().getName());
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (invitationList != null){
+            return  invitationList.size();
+        }
+        else return 0;
+    }
+
+    public void setInvitationList(ArrayList<Invitation> invitationList){
+        this.invitationList = invitationList;
+        notifyDataSetChanged();
+    }
+
+    public class InvitationViewHolder extends RecyclerView.ViewHolder{
+
+        private TextView tvName;
+        private Button btAccept;
+        private Button btDeny;
+
+        public InvitationViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvName = itemView.findViewById(R.id.tvName);
+            btAccept = itemView.findViewById(R.id.btAccept);
+            btDeny = itemView.findViewById(R.id.btDeny);
+
+            btAccept.setOnClickListener(v -> {
+                if (listenerAccept != null)
+                    listenerAccept.onItemAcceptClick(invitationList.get(InvitationViewHolder.this.getAdapterPosition()));
+            });
+
+            btDeny.setOnClickListener(v -> {
+                if (listenerDeny != null)
+                    listenerDeny.onItemDenyClick(invitationList.get(InvitationViewHolder.this.getAdapterPosition()));
+            });
+        }
+    }
+
+    public interface OnItemClickAcceptListener {
+        void onItemAcceptClick(Invitation invitation);
+    }
+
+    public interface OnItemClickDenyListener{
+        void onItemDenyClick(Invitation invitation);
+    }
+
+    public void setOnClickAcceptListener(OnItemClickAcceptListener listenerAccept){
+        this.listenerAccept = listenerAccept;
+    }
+
+    public void setOnClickDenyListener(OnItemClickDenyListener listenerDeny){
+        this.listenerDeny = listenerDeny;
+    }
+
+}
