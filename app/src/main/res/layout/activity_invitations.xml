@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background"
-    tools:context=".ui.invitations.InvitationsActivity">
+    tools:context=".ui.friends.InvitationsActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -21,7 +21,7 @@
             android:weightSum="4">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tvInvitation"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
@@ -39,7 +39,7 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvInvitations"
+            android:id="@+id/rvInvitation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/item_invitations" />

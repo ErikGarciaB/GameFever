@@ -27,6 +27,32 @@
     <string name="user_is_you">--Este eres tu--</string>
     <string name="user_is_friend">Ya es amigo</string>
 
+    <string name="play">Jugar</string>
+    <string name="continue_game">Continuar Partidas</string>
+    <string name="invite">Invitar</string>
+    <string name="invite_game">Invitar a jugar</string>
+    <string name="chat">Chat</string>
+
+    <string name="already_has_a_game">Ya teneis una partida</string>
+
+    <string name="match_with">Partida con %1$s</string>
+    <string name="enter_match">Entrar</string>
+
+    <string name="message">Mensaje</string>
+    <string name="chat_of">Chat de %1$s</string>
+
+    <string name="tic_tac_toe">Tres en raya</string>
+    <string name="versus">VS</string>
+    <string name="your_Turn">Tu turno</string>
+    <string name="enemy_Turn">Turno de %1$s</string>
+    <string name="victory">¡¡Victoria!!</string>
+    <string name="defeat">¡¡Derrota!!</string>
+    <string name="draw">¡¡Empate!!</string>
+
+    <string name="not_your_turn">No se puede realizar la jugada. No es su turno</string>
+    <string name="square_filled">La casilla ya esta rellenada.</string>
+    <string name="confirm">Confirmar</string>
+    <string name="confirm_play">¿Confirmas la jugada?</string>
 
     <string name="accept">Aceptar</string>
     <string name="deny">Denegar</string>
@@ -42,6 +68,8 @@
     <string name="no_mail">Rellene el correo</string>
     <string name="no_name">Rellene el nombre</string>
     <string name="no_password">Rellene la contraseña</string>
+    <string name="long_username">El nombre debe tener menos de 12 caracteres.</string>
+    <string name="short_password">La contraseña debe tener mas de 6 caracteres</string>
     <string name="incorrect_error">El correo o la contraseña no coincide</string>
     <string name="invalid_name">El nombre esta en uso. Prueba otro nombre.</string>
 

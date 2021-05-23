@@ -43,8 +43,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:18.0.2'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-firestore:22.1.2'
-
+    implementation 'com.github.aakira:expandable-layout:1.6.0@aar'
     implementation 'com.firebaseui:firebase-ui-auth:7.1.1'
     implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
+
 
 }

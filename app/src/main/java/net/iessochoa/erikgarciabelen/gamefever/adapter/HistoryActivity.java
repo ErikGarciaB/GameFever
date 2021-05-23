@@ -1,4 +1,4 @@
-package net.iessochoa.erikgarciabelen.gamefever.ui.TicTacToe;
+package net.iessochoa.erikgarciabelen.gamefever.adapter;
 
 import android.os.Bundle;
 
@@ -6,11 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import net.iessochoa.erikgarciabelen.gamefever.R;
 
-public class TicTacToeActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tic_tac_toe);
+        setContentView(R.layout.activity_history);
     }
 }

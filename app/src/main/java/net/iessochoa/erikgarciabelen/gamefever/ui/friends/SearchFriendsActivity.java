@@ -1,10 +1,11 @@
-package net.iessochoa.erikgarciabelen.gamefever.ui.searchfriends;
+ package net.iessochoa.erikgarciabelen.gamefever.ui.friends;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -29,7 +30,6 @@ import net.iessochoa.erikgarciabelen.gamefever.model.FirebaseContract;
 import net.iessochoa.erikgarciabelen.gamefever.model.FriendRelation;
 import net.iessochoa.erikgarciabelen.gamefever.model.Invitation;
 import net.iessochoa.erikgarciabelen.gamefever.model.User;
-import net.iessochoa.erikgarciabelen.gamefever.ui.friends.FriendsFragment;
 
 import java.util.ArrayList;
 
@@ -37,7 +37,8 @@ public class SearchFriendsActivity extends AppCompatActivity {
 
     private SearchView svFriendName;
     private RecyclerView rvFriends;
-    private FirestoreRecyclerAdapter<User, UserViewHolder> adapter;
+    private Button btSFReturn;
+    private FirestoreRecyclerAdapter<User, SearchFriendViewHolder> adapter;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -63,18 +64,26 @@ public class SearchFriendsActivity extends AppCompatActivity {
                 return false;
             }
         });
+        btSFReturn.setOnClickListener(v -> finish());
     }
 
 
+    /**
+     * Initialize the components of the activity
+     */
     private void initializeComponents() {
         svFriendName = findViewById(R.id.svFriendName);
-        rvFriends = findViewById(R.id.rvFriends);
+        rvFriends = findViewById(R.id.rvSearchFriends);
+        btSFReturn = findViewById(R.id.btSFReturn);
         rvFriends.setLayoutManager(new LinearLayoutManager(this));
         initializeAdapter();
 
 
     }
 
+    /**
+     * Initialize the adapter of the users in the firebase.
+     */
     private void initializeAdapter() {
         Query query = db.collection(FirebaseContract.UserEntry.COLLECTION_NAME)
                 .orderBy(FirebaseContract.UserEntry.NAME);
@@ -84,29 +93,34 @@ public class SearchFriendsActivity extends AppCompatActivity {
                 .setQuery(query, User.class)
                 .build();
 
-        adapter = new FirestoreRecyclerAdapter<User, UserViewHolder>(options) {
+        adapter = new FirestoreRecyclerAdapter<User, SearchFriendViewHolder>(options) {
 
             @Override
-            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull User model) {
+            protected void onBindViewHolder(@NonNull SearchFriendViewHolder holder, int position, @NonNull User model) {
                 holder.setTextViews(model.getName());
                 holder.setAddFriends();
             }
 
             @NonNull
             @Override
-            public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public SearchFriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_searchfriends, parent, false);
-                return new UserViewHolder(view);
+                return new SearchFriendViewHolder(view);
             }
         };
         rvFriends.setAdapter(adapter);
     }
 
+    /**
+     * Create the query that will search the users in the firebase database
+     * @param userName if the username is empty the query will search all the users, if not,
+     *                  will search users that begins with the param
+     */
     private void searchUsers(String userName) {
         Query query;
         if (userName != null) {
             query = db.collection(FirebaseContract.UserEntry.COLLECTION_NAME)
-                    .orderBy(FirebaseContract.UserEntry.NAME).startAt(userName).endAt(userName + "\uf8ff");
+                    .orderBy(FirebaseContract.UserEntry.NAME).startAt(userName);
         } else
             query = db.collection(FirebaseContract.UserEntry.COLLECTION_NAME)
                     .orderBy(FirebaseContract.UserEntry.NAME);
@@ -119,18 +133,25 @@ public class SearchFriendsActivity extends AppCompatActivity {
         adapter.updateOptions(options);
     }
 
-    private class UserViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * Create and control the view for each item in the recyclerView
+     */
+    private class SearchFriendViewHolder extends RecyclerView.ViewHolder {
         private View view;
         private TextView tvName, tvAlert;
         private ImageView ivAddFriends;
         final ArrayList<Invitation> invitations = getIntent().getExtras().getParcelableArrayList(FriendsFragment.EXTRA_INVITATION);
         final ArrayList<FriendRelation> friends = getIntent().getExtras().getParcelableArrayList(FriendsFragment.EXTRA_FRIENDS);
 
-        public UserViewHolder(@NonNull View itemView) {
+        public SearchFriendViewHolder(@NonNull View itemView) {
             super(itemView);
             view = itemView;
         }
 
+        /**
+         * Create the textview component of the item and put the username in one text
+         * @param userName Is the name that will be display in the textview
+         */
         public void setTextViews(String userName) {
             tvAlert = view.findViewById(R.id.tvAlert);
             tvName = view.findViewById(R.id.tvName);
@@ -138,6 +159,10 @@ public class SearchFriendsActivity extends AppCompatActivity {
         }
 
 
+        /**
+         * Create the button that will be use to create a invitation and filter
+         * the user that is already invited and the one that is already your friend
+         */
         public void setAddFriends() {
             final boolean[] isInvited = new boolean[1];
             isInvited[0] = false;
@@ -231,6 +256,11 @@ public class SearchFriendsActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Create the invitation in the database
+     * @param hostUser Is the current user
+     * @param invitedUser Is the user that is invited
+     */
     private void sendInvitation(User hostUser, User invitedUser) {
         Invitation inv = new Invitation(hostUser, invitedUser);
         db.collection(FirebaseContract.InvitationEntry.COLLECTION_NAME).document().set(inv);

@@ -32,15 +32,20 @@ public class LoggingActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logging);
-        // Initialize the components
         initializeComponents();
 
-        // If firebase has a user, skip the login screen.
-        if (auth.getCurrentUser() != null)
+        /**
+         * If firebase has a user, skip the login screen.
+         */
+        if (auth.getCurrentUser() != null) {
             initializeMainApp();
+            finish();
+        }
 
-        // When the login button is pressed, the app check if the name and password fields
-        // are filled. If they are filled, firebase try to log the user.
+        /**
+         * When the login button is pressed, the app check if the name and password fields
+         * are filled. If they are filled, firebase try to log the user.
+         */
         btLogin.setOnClickListener(v -> {
             String email, password;
 
@@ -61,7 +66,9 @@ public class LoggingActivity extends AppCompatActivity{
                         });
             }
         });
-        // When the No Account button is pressed, the RegistingActivity is created and started.
+        /**
+         * When the No Account button is pressed, the RegistingActivity is created and started.
+         */
         tvNoAccount.setOnClickListener(v -> {
             Intent intent = new Intent(this, RegistingActivity.class);
             startActivity(intent);

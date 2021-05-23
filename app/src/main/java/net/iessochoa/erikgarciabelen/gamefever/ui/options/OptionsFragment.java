@@ -9,7 +9,6 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -18,17 +17,25 @@ import net.iessochoa.erikgarciabelen.gamefever.R;
 
 public class OptionsFragment extends Fragment {
 
-    private OptionsViewModel optionsViewModel;
     private Button btCerrarSesion;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
+    /**
+     * Create the view of the fragment activity
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        optionsViewModel =
-                new ViewModelProvider(this).get(OptionsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_options, container, false);
         initializeComponents(root);
 
+
+        /**
+         * Log out the user and start the login activity
+         */
         btCerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

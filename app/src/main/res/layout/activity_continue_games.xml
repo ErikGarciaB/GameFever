@@ -5,15 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background"
-    tools:context=".ui.friends.SearchFriendsActivity">
+    tools:context=".ui.friends.InvitationsActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,36 +21,28 @@
             android:weightSum="4">
 
             <TextView
-                android:id="@+id/tvSearch"
+                android:id="@+id/tvContinue"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="3"
                 android:background="@color/app_button"
                 android:gravity="center"
-                android:layout_weight="3"
-                android:text="@string/search_friends_noUnderline"
+                android:text="@string/continue_game"
                 android:textSize="24sp" />
 
             <Button
-                android:id="@+id/btSFReturn"
+                android:id="@+id/btCGReturn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/return_" />
         </LinearLayout>
 
-        <SearchView
-            android:id="@+id/svFriendName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </SearchView>
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSearchFriends"
+            android:id="@+id/rvContinueGames"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_searchfriends" />
-    </LinearLayout>
+            tools:listitem="@layout/item_continue" />
 
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
