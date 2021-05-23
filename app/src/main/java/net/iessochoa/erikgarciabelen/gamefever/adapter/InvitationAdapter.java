@@ -20,6 +20,12 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
     private OnItemClickDenyListener listenerDeny;
 
 
+    /**
+     * Create the viewHolder and is assigned to a layout
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public InvitationAdapter.InvitationViewHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType){
         View itemView = LayoutInflater.from(parent.getContext())
@@ -27,6 +33,11 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
         return new InvitationViewHolder(itemView);
     }
 
+    /**
+     * Bind the information of the invitation to layout's component
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull InvitationViewHolder holder, int position) {
         if (invitationList != null){
@@ -35,6 +46,10 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
         }
     }
 
+    /**
+     * Get the count of the list
+     * @return the count of the list
+     */
     @Override
     public int getItemCount() {
         if (invitationList != null){
@@ -43,11 +58,18 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
         else return 0;
     }
 
+    /**
+     * Setter of the invitationList.
+     * @param invitationList
+     */
     public void setInvitationList(ArrayList<Invitation> invitationList){
         this.invitationList = invitationList;
         notifyDataSetChanged();
     }
 
+    /**
+     * Create the viewholder of the recyclerView and create the behaviour of the components.
+     */
     public class InvitationViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvName;
@@ -72,6 +94,7 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
         }
     }
 
+    // Intefaces
     public interface OnItemClickAcceptListener {
         void onItemAcceptClick(Invitation invitation);
     }
@@ -80,6 +103,7 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
         void onItemDenyClick(Invitation invitation);
     }
 
+    // Setters of interfaces
     public void setOnClickAcceptListener(OnItemClickAcceptListener listenerAccept){
         this.listenerAccept = listenerAccept;
     }

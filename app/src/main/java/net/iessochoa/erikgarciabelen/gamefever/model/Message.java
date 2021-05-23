@@ -1,14 +1,15 @@
 package net.iessochoa.erikgarciabelen.gamefever.model;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
 
 public class Message {
     private String body;
     private String username;
 
     @ServerTimestamp
-    private Timestamp time;
+    private Date time;
 
     public Message(){}
 
@@ -33,11 +34,11 @@ public class Message {
         this.username = username;
     }
 
-    public Timestamp getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(Timestamp time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 }

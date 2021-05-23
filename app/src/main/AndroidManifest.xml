@@ -11,14 +11,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GameFever">
-        <activity android:name=".ui.TicTacToe.TicTacToeActivity"></activity>
+        <activity android:name=".adapter.HistoryActivity"></activity>
+        <activity android:name=".ui.games.GameChatActivity" />
+        <activity android:name=".ui.games.GameInvitationActivity" />
+        <activity android:name=".ui.games.ContinueGamesActivity" />
+        <activity android:name=".ui.friends.ChatActivity" />
+        <activity android:name=".ui.games.TicTacToeActivity" />
 
         <service
             android:name=".MainActivity"
             android:stopWithTask="false" />
 
-        <activity android:name=".ui.invitations.InvitationsActivity" />
-        <activity android:name=".ui.searchfriends.SearchFriendsActivity" />
+        <activity android:name=".ui.friends.InvitationsActivity" />
+        <activity android:name=".ui.friends.SearchFriendsActivity" />
         <activity android:name=".RegistingActivity" />
         <activity android:name=".MainActivity" />
         <activity

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -79,7 +80,7 @@ public class RegistingActivity extends AppCompatActivity {
     }
 
     /**
-     * Register the user in the app, create a firebase document to him and start the MainActivityActivity.
+     * Register the user in the app, create a firebase document to him and start the MainActivity.
      */
     private void registerUser() {
         String email, password;
@@ -104,6 +105,7 @@ public class RegistingActivity extends AppCompatActivity {
                     Intent intent = new Intent(RegistingActivity.this, MainActivity.class);
                     progressBar.setVisibility(View.VISIBLE);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -115,6 +117,7 @@ public class RegistingActivity extends AppCompatActivity {
      */
     private boolean checkFields() {
         boolean bool = true;
+
         if (TextUtils.isEmpty(etRegName.getText())) {
             etRegName.setHint(R.string.no_name);
             bool = false;
@@ -125,6 +128,16 @@ public class RegistingActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(etRegMail.getText())) {
             etRegMail.setHint(R.string.no_mail);
+            bool = false;
+        }
+        if (etRegPassword.length() < 6){
+            Toast.makeText(this, R.string.short_password, Toast.LENGTH_SHORT).show();
+            etRegPassword.setText("");
+            bool = false;
+        }
+        if (etRegName.length() > 12){
+            Toast.makeText(this, R.string.long_username, Toast.LENGTH_SHORT).show();
+            etRegName.setText("");
             bool = false;
         }
         return bool;

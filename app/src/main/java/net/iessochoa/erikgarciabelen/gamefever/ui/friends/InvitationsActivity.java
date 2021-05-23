@@ -1,4 +1,4 @@
-package net.iessochoa.erikgarciabelen.gamefever.ui.invitations;
+package net.iessochoa.erikgarciabelen.gamefever.ui.friends;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -19,7 +19,6 @@ import net.iessochoa.erikgarciabelen.gamefever.model.FirebaseContract;
 import net.iessochoa.erikgarciabelen.gamefever.model.FriendRelation;
 import net.iessochoa.erikgarciabelen.gamefever.model.Invitation;
 import net.iessochoa.erikgarciabelen.gamefever.model.Message;
-import net.iessochoa.erikgarciabelen.gamefever.ui.friends.FriendsFragment;
 
 import java.util.ArrayList;
 
@@ -32,16 +31,26 @@ public class InvitationsActivity extends AppCompatActivity {
     FirebaseAuth auth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    /**
+     * Create the view of the activity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invitations);
         initializeComponents();
+        /**
+         * Finish the activity
+         */
         btInvitationReturn.setOnClickListener(v -> finish());
     }
 
+    /**
+     * Initialize the components from the activity.
+     */
     private void initializeComponents(){
-        rvInvitation = findViewById(R.id.rvInvitations);
+        rvInvitation = findViewById(R.id.rvInvitation);
 
         btInvitationReturn = findViewById(R.id.btInvitationReturn);
 
@@ -61,7 +70,7 @@ public class InvitationsActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     *  A friend relation is created in the database with the user selected and the invitation is deleted from the database.
      */
     private void acceptInvitation(Invitation invitation){
         CollectionReference collectionReference = db.collection(FirebaseContract.InvitationEntry.COLLECTION_NAME);
@@ -73,12 +82,10 @@ public class InvitationsActivity extends AppCompatActivity {
                 invitations.remove(invitation);
                 for (QueryDocumentSnapshot document: task.getResult()) {
                     FriendRelation fr = new FriendRelation(invitation.getHostUser(), invitation.getInvitedUser());
-                    db.collection(FirebaseContract.FriendRelation.COLLECTION_NAME).document().set(fr);
-                    db.collection(FirebaseContract.FriendRelation.COLLECTION_NAME).whereEqualTo(FirebaseContract.FriendRelation.USER_1, invitation.getHostUser())
-                            .whereEqualTo(FirebaseContract.FriendRelation.USER_2, invitation.getInvitedUser()).get().addOnCompleteListener(task1 -> {
-                                task.getResult().getDocuments().get(0).getReference().collection("Chat").document("DONT").set(new Message());
-                    });
-
+                    String primaryKey = invitation.getHostUser().getName() + "-" + invitation.getInvitedUser().getName();
+                    db.collection(FirebaseContract.FriendRelation.COLLECTION_NAME).document(primaryKey).set(fr);
+                    db.collection(FirebaseContract.FriendRelation.COLLECTION_NAME).document(primaryKey)
+                            .collection(FirebaseContract.ChatEntry.COLLECTION_NAME).document().set(new Message());
                     document.getReference().delete();
                     adapter.setInvitationList(invitations);
                 }
@@ -88,7 +95,7 @@ public class InvitationsActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * The invitation is deleted in the database
      */
     private void denyInvitation(Invitation invitation){
         CollectionReference collectionReference = db.collection(FirebaseContract.InvitationEntry.COLLECTION_NAME);
