@@ -7,11 +7,14 @@ public class FriendRelation implements Parcelable {
     private User user1;
     private User user2;
 
+    private String id;
+
     public FriendRelation(){}
 
-    public FriendRelation(User user1, User user2) {
+    public FriendRelation(User user1, User user2, String id) {
         this.user1 = user1;
         this.user2 = user2;
+        this.id = id;
     }
 
     public User getUser1() {
@@ -30,9 +33,18 @@ public class FriendRelation implements Parcelable {
         this.user2 = user2;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     protected FriendRelation(Parcel in) {
         user1 = (User) in.readValue(User.class.getClassLoader());
         user2 = (User) in.readValue(User.class.getClassLoader());
+        id = (String) in.readValue(User.class.getClassLoader());
     }
 
     @Override
@@ -44,6 +56,7 @@ public class FriendRelation implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(user1);
         dest.writeValue(user2);
+        dest.writeValue(id);
     }
 
     @SuppressWarnings("unused")

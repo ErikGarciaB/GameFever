@@ -68,7 +68,7 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
     }
 
     /**
-     * Create the viewholder of the recyclerView and create the behaviour of the components.
+     * Create the viewholder of the recyclerView and create the components.
      */
     public class InvitationViewHolder extends RecyclerView.ViewHolder{
 
@@ -82,6 +82,9 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
             btAccept = itemView.findViewById(R.id.btAccept);
             btDeny = itemView.findViewById(R.id.btDeny);
 
+            /**
+             * Create the listeners of the buttons
+             */
             btAccept.setOnClickListener(v -> {
                 if (listenerAccept != null)
                     listenerAccept.onItemAcceptClick(invitationList.get(InvitationViewHolder.this.getAdapterPosition()));

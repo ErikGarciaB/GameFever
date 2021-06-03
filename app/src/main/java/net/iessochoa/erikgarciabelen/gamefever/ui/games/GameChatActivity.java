@@ -1,6 +1,9 @@
 package net.iessochoa.erikgarciabelen.gamefever.ui.games;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -9,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +31,7 @@ import net.iessochoa.erikgarciabelen.gamefever.adapter.ChatAdapter;
 import net.iessochoa.erikgarciabelen.gamefever.model.FirebaseContract;
 import net.iessochoa.erikgarciabelen.gamefever.model.Message;
 import net.iessochoa.erikgarciabelen.gamefever.model.TicTacToe;
-import net.iessochoa.erikgarciabelen.gamefever.ui.friends.FriendsFragment;
+import net.iessochoa.erikgarciabelen.gamefever.ui.fragments.FriendsFragment;
 
 public class GameChatActivity extends AppCompatActivity {
 
@@ -47,12 +51,35 @@ public class GameChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_chat);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.no_intenet_alert).setMessage(R.string.no_internet_message);
+            builder.setOnDismissListener(dialog -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            });
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            }).show();
+        }
+
         initializeComponents();
 
         btGameSend.setOnClickListener(v -> sendMessage());
         btGameChatReturn.setOnClickListener(v -> finish());
     }
 
+    /**
+     * Initialize the components from the activity.
+     */
     private void initializeComponents() {
         ttt = getIntent().getParcelableExtra(FriendsFragment.EXTRA_FRIENDS);
         pk = ttt.getId();
@@ -77,6 +104,9 @@ public class GameChatActivity extends AppCompatActivity {
         initializeGameChatAdapter();
     }
 
+    /**
+     * Initialize the game chat adapter and create the query to obtain all the message from the relation.
+     */
     private void initializeGameChatAdapter() {
         Query q = db.collection(FirebaseContract.TicTacToeGameEntry.COLLECTION_NAME)
                 .document(pk)
@@ -92,7 +122,7 @@ public class GameChatActivity extends AppCompatActivity {
         if (adapter != null)
             adapter.stopListening();
 
-        adapter = new ChatAdapter(options);
+        adapter = new ChatAdapter(options, getApplicationContext());
         rvGameChat.setAdapter(adapter);
 
         adapter.startListening();
@@ -115,6 +145,9 @@ public class GameChatActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Create a message in the sub-collection of the Game and remove the text from the editText
+     */
     private void sendMessage() {
         String body = etGameMessage.getText().toString();
         if (!body.isEmpty()) {

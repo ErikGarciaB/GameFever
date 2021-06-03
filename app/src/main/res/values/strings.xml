@@ -6,11 +6,20 @@
     <string name="no">No</string>
     <string name="return_">Volver</string>
 
+    <string name="your_name">Tu nombre</string>
+    <string name="your_email">Tu correo electrónico</string>
+
     <string name="title_game">Juegos</string>
     <string name="title_friends">Amigos</string>
     <string name="title_options">Opciones</string>
     <string name="sign_out">Cerrar Sesión</string>
+    <string name="sign_out_confirm">¿Seguro que quieres cerrar sesión?</string>
+
     <string name="history">Historial</string>
+    <string name="game_with">%1$s con %2$s</string>
+    <string name="history_victory">Victoria</string>
+    <string name="history_defeat">Derrota</string>
+    <string name="history_draw">Empate</string>
 
     <string name="gameFever">GameFever</string>
     <string name="email">Correo Electronico</string>
@@ -32,6 +41,12 @@
     <string name="invite">Invitar</string>
     <string name="invite_game">Invitar a jugar</string>
     <string name="chat">Chat</string>
+    <string name="delete">Borrar</string>
+    <string name="sure_delete">¿Seguro que quieres borrar a tu amigo?</string>
+    <string name="delete_confirm">Borrado con exito</string>
+    <string name="alert">Aviso</string>
+
+    <string name="no_users">No se han encontrado usuarios para crear juego</string>
 
     <string name="already_has_a_game">Ya teneis una partida</string>
 
@@ -62,19 +77,28 @@
 
     <string name="logging">Iniciar sesión</string>
     <string name="register">Registrar Cuenta</string>
-    <string name="no_account"><u>¿No tienes cuenta? Crear Cuenta</u></string>
-    <string name="have_account"><u>¿Ya tienes cuenta? Iniciar sesión</u></string>
+    <string name="no_account"><u>¿No tienes cuenta? Crea una Cuenta</u></string>
+    <string name="have_account"><u>¿Ya tienes cuenta? Inicia sesión</u></string>
 
     <string name="no_mail">Rellene el correo</string>
     <string name="no_name">Rellene el nombre</string>
     <string name="no_password">Rellene la contraseña</string>
-    <string name="long_username">El nombre debe tener menos de 12 caracteres.</string>
-    <string name="short_password">La contraseña debe tener mas de 6 caracteres</string>
+    <string name="long_username">El nombre debe tener menos de 16 caracteres.</string>
+    <string name="short_password">La contraseña debe tener mas de 8 caracteres</string>
+    <string name="space_in_name">El nombre no puede contener espacios</string>
+    <string name="incorrect_mail">El correo no tiene el formato adecuado</string>
     <string name="incorrect_error">El correo o la contraseña no coincide</string>
     <string name="invalid_name">El nombre esta en uso. Prueba otro nombre.</string>
+    <string name="invalid_mail">El email ya esta siendo utilizado</string>
+
+    <string name="sign_in_error">Hubo un error al iniciar sesión. Mire si es correctos los datos</string>
 
     <string name="confirm_title">Solicitud</string>
     <string name="confirm_invitation">¿Deseas enviar una solicitud a %1$s?</string>
 
     <string name="welcome_message">Bienvenido %1$s</string>
+
+    <string name="no_intenet_alert">Conexión a internet</string>
+    <string name="no_internet_message">Se debe tener una conexión a internet. Comprueba tu red</string>
+    <string name="ok">OK</string>
 </resources>

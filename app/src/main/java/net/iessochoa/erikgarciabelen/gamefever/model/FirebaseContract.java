@@ -48,6 +48,7 @@ public class FirebaseContract {
         public static final String COLLECTION_NAME = "FriendRelation";
         public static final String USER_1 = "User1";
         public static final String USER_2 = "User2";
+        public static final String ID = "id";
     }
     
 }

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.iessochoa.erikgarciabelen.gamefever">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -10,24 +11,23 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:theme="@style/Theme.GameFever">
-        <activity android:name=".adapter.HistoryActivity"></activity>
+        <activity android:name=".ui.options.HistoryActivity"></activity>
         <activity android:name=".ui.games.GameChatActivity" />
         <activity android:name=".ui.games.GameInvitationActivity" />
         <activity android:name=".ui.games.ContinueGamesActivity" />
         <activity android:name=".ui.friends.ChatActivity" />
         <activity android:name=".ui.games.TicTacToeActivity" />
 
-        <service
-            android:name=".MainActivity"
-            android:stopWithTask="false" />
 
         <activity android:name=".ui.friends.InvitationsActivity" />
         <activity android:name=".ui.friends.SearchFriendsActivity" />
-        <activity android:name=".RegistingActivity" />
+        <activity android:name=".ui.authentication.RegistingActivity" />
         <activity android:name=".MainActivity" />
         <activity
-            android:name=".LoggingActivity"
+            android:name=".ui.authentication.LoggingActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

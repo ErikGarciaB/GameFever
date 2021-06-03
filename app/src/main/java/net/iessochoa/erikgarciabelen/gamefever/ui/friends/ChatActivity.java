@@ -1,6 +1,9 @@
 package net.iessochoa.erikgarciabelen.gamefever.ui.friends;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -9,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +31,7 @@ import net.iessochoa.erikgarciabelen.gamefever.adapter.ChatAdapter;
 import net.iessochoa.erikgarciabelen.gamefever.model.FirebaseContract;
 import net.iessochoa.erikgarciabelen.gamefever.model.FriendRelation;
 import net.iessochoa.erikgarciabelen.gamefever.model.Message;
+import net.iessochoa.erikgarciabelen.gamefever.ui.fragments.FriendsFragment;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -46,6 +51,27 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initializeComponents();
+
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        /**
+         * Detect if the mobile has internet. If the mobile doesn't have internet the application shut down.
+         */
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.no_intenet_alert).setMessage(R.string.no_internet_message);
+            builder.setOnDismissListener(dialog -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            });
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            }).show();
+        }
 
         btSend.setOnClickListener(v -> {
             sendMessage();
@@ -95,7 +121,7 @@ public class ChatActivity extends AppCompatActivity {
         if (adapter != null) {
             adapter.stopListening();
         }
-        adapter = new ChatAdapter(options);
+        adapter = new ChatAdapter(options, getApplicationContext());
         rvChat.setAdapter(adapter);
 
         adapter.startListening();

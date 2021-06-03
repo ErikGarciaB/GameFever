@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.iessochoa.erikgarciabelen.gamefever.R;
-import net.iessochoa.erikgarciabelen.gamefever.ui.games.GamesFragment;
+import net.iessochoa.erikgarciabelen.gamefever.ui.fragments.GamesFragment;
 
 import java.util.ArrayList;
 
@@ -25,6 +25,12 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
     private OnItemClickInviteListener listenerInvite;
     private OnItemClickPlayListener listenerPlay;
 
+    /**
+     * Create the view holder and assign it to the layout item
+     * @param parent
+     * @param viewType
+     * @return the view holder
+     */
     @NonNull
     @Override
     public GameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,6 +39,11 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         return new GameViewHolder(itemView);
     }
 
+    /**
+     * Bind the information of the invitation to layout's component
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
         if (games != null){
@@ -44,6 +55,10 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         }
     }
 
+    /**
+     * Getter of the size's games
+     * @return the size.
+     */
     @Override
     public int getItemCount() {
         if (games != null){
@@ -52,11 +67,18 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
         else return 0;
     }
 
+    /**
+     * Setter of games
+     * @param games
+     */
     public void setGames(ArrayList<String> games){
         this.games = games;
         notifyDataSetChanged();
     }
 
+    /**
+     * Create the viewholder of the recyclerView and create the components.
+     */
     public class GameViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvGame, tvGameID;
@@ -76,6 +98,9 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
             btPlay = itemView.findViewById(R.id.btPlay);
             btInvite = itemView.findViewById(R.id.btPlayInvite);
 
+            /**
+             * Create the listeners of the buttons
+             */
             ivGameExpand.setOnClickListener(v -> {
                 if (listenerExpand != null){
                     listenerExpand.onItemExpandClick(llGame, llOptions, ivGameExpand);

@@ -59,7 +59,7 @@
                     android:weightSum="4">
 
                     <Button
-                        android:id="@+id/btInvite"
+                        android:id="@+id/btDelete"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="24dp"
@@ -67,7 +67,7 @@
                         android:layout_marginBottom="4dp"
                         android:layout_weight="1"
                         android:background="@color/app_alt_button"
-                        android:text="@string/invite"></Button>
+                        android:text="@string/delete"></Button>
 
                     <Button
                         android:id="@+id/button2"

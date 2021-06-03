@@ -1,6 +1,10 @@
  package net.iessochoa.erikgarciabelen.gamefever.ui.friends;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +34,7 @@ import net.iessochoa.erikgarciabelen.gamefever.model.FirebaseContract;
 import net.iessochoa.erikgarciabelen.gamefever.model.FriendRelation;
 import net.iessochoa.erikgarciabelen.gamefever.model.Invitation;
 import net.iessochoa.erikgarciabelen.gamefever.model.User;
+import net.iessochoa.erikgarciabelen.gamefever.ui.fragments.FriendsFragment;
 
 import java.util.ArrayList;
 
@@ -47,20 +52,41 @@ public class SearchFriendsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_friends);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        /**
+         * Detect if the mobile has internet. If the mobile doesn't have internet the application shut down.
+         */
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.no_intenet_alert).setMessage(R.string.no_internet_message);
+            builder.setOnDismissListener(dialog -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            });
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            }).show();
+        }
         initializeComponents();
 
+        /**
+         * Detect when the searchView has changes in the field and search the users which games start with the content of the searchView.
+         */
         svFriendName.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-                searchUsers(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                searchUsers(null);
+                searchUsers(newText);
                 return false;
             }
         });
@@ -118,12 +144,11 @@ public class SearchFriendsActivity extends AppCompatActivity {
      */
     private void searchUsers(String userName) {
         Query query;
-        if (userName != null) {
+        if (userName != null)
             query = db.collection(FirebaseContract.UserEntry.COLLECTION_NAME)
-                    .orderBy(FirebaseContract.UserEntry.NAME).startAt(userName);
-        } else
-            query = db.collection(FirebaseContract.UserEntry.COLLECTION_NAME)
-                    .orderBy(FirebaseContract.UserEntry.NAME);
+                    .orderBy(FirebaseContract.UserEntry.NAME).startAt(userName).endAt(userName + "\uf8ff");
+        else
+            query = db.collection(FirebaseContract.UserEntry.COLLECTION_NAME);
 
 
         FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
@@ -174,13 +199,19 @@ public class SearchFriendsActivity extends AppCompatActivity {
             String invitedName, hostName, textName;
             textName = tvName.getText().toString();
 
-            if (textName.equals(auth.getCurrentUser().getDisplayName()))
+            /**
+             * If the user selected is the app User, the add button hides.
+             */
+            if (textName.equals(currentName))
                 isUserCurrentUser = true;
             if (isUserCurrentUser) {
                 ivAddFriends.setVisibility(View.INVISIBLE);
                 tvAlert.setVisibility(View.VISIBLE);
                 tvAlert.setText(R.string.user_is_you);
             } else {
+                /**
+                 * Search in the invitations if the databse user has is invited by the app user or the app user invite him.
+                 */
                 for (Invitation i : invitations) {
                     invitedName = i.getInvitedUser().getName();
                     hostName = i.getHostUser().getName();
@@ -190,11 +221,19 @@ public class SearchFriendsActivity extends AppCompatActivity {
                         isUserInvitedYou = true;
                     }
                 }
+                /**
+                 * Search in the friend relations if the database user is friend of the app user.
+                 */
                 for (FriendRelation friend : friends){
                     if (friend.getUser1().getName().equals(textName) || friend.getUser2().getName().equals(textName))
                         isUserFriend = true;
                 }
+                /**
+                 * If the database user isn't invitedd by the user app or is his friend. The app ask the app user if he want to send an invitation.
+                 */
                 if (!isInvited[0] && !isUserInvitedYou) {
+                    tvAlert.setVisibility(View.INVISIBLE);
+                    ivAddFriends.setVisibility(View.VISIBLE);
                     ivAddFriends.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -235,6 +274,9 @@ public class SearchFriendsActivity extends AppCompatActivity {
                         }
                     });
                 }
+                /**
+                 * Disable the add button if the firebase user is invited or is already a friend of the app user.
+                 */
                 if (isInvited[0]) {
                     ivAddFriends.setVisibility(View.INVISIBLE);
                     tvAlert.setVisibility(View.VISIBLE);

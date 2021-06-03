@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import net.iessochoa.erikgarciabelen.gamefever.R;
@@ -41,12 +42,22 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
         this.context = context;
     }
 
+    /**
+     * Bind the information of the invitation to layout's component and create the component's behaviour
+     * @param holder
+     * @param position
+     */
     @Override
     protected void onBindViewHolder(@NonNull TicTacToeHolder holder, int position, @NonNull TicTacToe model) {
         fillMap(holder, model);
         fillListeners(holder, model);
     }
 
+    /**
+     * Create the listeners of the layout's components
+     * @param holder
+     * @param model
+     */
     private void fillListeners(TicTacToeHolder holder, TicTacToe model) {
         holder.ib0.setOnClickListener(v -> doPlay(0, model));
         holder.ib1.setOnClickListener(v -> doPlay(1, model));
@@ -60,6 +71,11 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
     }
 
 
+    /**
+     * Make the play of the player and detect if he can do it.
+     * @param position Is the position of the table that play
+     * @param model Is the TicTacToe Table
+     */
     private void doPlay(int position, TicTacToe model) {
         if (TicTacToeActivity.YOUR_TURN && !TicTacToeActivity.MATCH_ENDED) {
             if (model.getMap().get(position) != 0)
@@ -72,6 +88,11 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
         }
     }
 
+    /**
+     * Change the turns of the player in the database and check if the game is over.
+     * @param position Is the position of the table played
+     * @param model Is the TicTacToe Table
+     */
     private void makePlay(int position, TicTacToe model) {
         Map<String, Object> fieldToUpdate = new HashMap<>();
         ArrayList<Integer> map = model.getMap();
@@ -89,14 +110,18 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
         model.getMap().set(position, TicTacToeActivity.PLAYERNUMBER);
         db.collection(FirebaseContract.TicTacToeGameEntry.COLLECTION_NAME)
                 .document(model.getId()).update(fieldToUpdate).addOnCompleteListener(task -> {
-            if (model.getMoveCounter() + 1 == 9)
-                matchDrawed(model);
-            else checkGame(model, position);
+            checkGame(model, position);
         });
     }
 
+    /**
+     * Check if the game is done.
+     * @param model  Is the TicTacToe Table
+     * @param position Is the last position of the table played
+     */
     private void checkGame(TicTacToe model, int position){
         ArrayList<Integer> map = model.getMap();
+        boolean draw = true;
 
         int x, y, playerNumber;
 
@@ -111,6 +136,7 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
             if (board[i][x] != playerNumber)
                 break;
             if (i == 2){
+                draw = false;
                 matchWinned(playerNumber, model);
             }
         }
@@ -118,16 +144,20 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
         for (int i = 0; i < 3; i++) {
             if (board[y][i] != playerNumber)
                 break;
-            if (i == 2)
+            if (i == 2) {
+                draw = false;
                 matchWinned(playerNumber, model);
+            }
         }
 
         if (x == y){
             for (int i = 0; i < 3; i++) {
                 if (board[i][i] != playerNumber)
                     break;
-                if (i == 2)
+                if (i == 2) {
+                    draw = false;
                     matchWinned(playerNumber, model);
+                }
             }
         }
 
@@ -135,18 +165,30 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
             for(int i = 0; i < 3; i++){
                 if (board[i][(2) - i] != playerNumber)
                     break;
-                if (i == 2)
+                if (i == 2) {
+                    draw = false;
                     matchWinned(playerNumber, model);
+                }
             }
+        }
+
+        if (draw){
+            if (model.getMoveCounter() + 1 == 9)
+                matchDrawed(model);
         }
 
 
     }
 
+    /**
+     * Delete the drawed game from the database and create the history of the two players
+     * @param model is the tic tac toe Game
+     */
     private void matchDrawed(TicTacToe model){
         User player1, player2;
         player1 = model.getPlayer1();
         player2 = model.getPlayer2();
+        TicTacToeActivity.MATCH_DRAWED = true;
 
         History h = new History(player1.getName(), player2.getName(), context.getString(R.string.tic_tac_toe), false, false);
 
@@ -155,17 +197,28 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
                 .collection(FirebaseContract.HistoryEntry.COLLECTION_NAME)
                 .add(h);
 
-
-
         db.collection(FirebaseContract.UserEntry.COLLECTION_NAME)
                 .document(player2.getName())
                 .collection(FirebaseContract.HistoryEntry.COLLECTION_NAME)
                 .add(h);
 
         db.collection(FirebaseContract.TicTacToeGameEntry.COLLECTION_NAME)
+                .document(model.getId()).collection(FirebaseContract.ChatEntry.COLLECTION_NAME).get()
+                .addOnCompleteListener(task -> {
+                    for (DocumentSnapshot d : task.getResult()){
+                        db.collection(FirebaseContract.TicTacToeGameEntry.COLLECTION_NAME).document(model.getId())
+                                .collection(FirebaseContract.ChatEntry.COLLECTION_NAME).document(d.getId()).delete();
+                    }
+                });
+
+        db.collection(FirebaseContract.TicTacToeGameEntry.COLLECTION_NAME)
                 .document(model.getId()).delete();
     }
 
+    /**
+     * Delete the winned game from the database and create the history of the two players
+     * @param model is the tic tac toe Game
+     */
     private void matchWinned(int playerNumber, TicTacToe model){
 
         User player1, player2;
@@ -198,6 +251,11 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
     }
 
 
+    /**
+     * Populate the imagebuttons with a circle or a cross.
+     * @param holder
+     * @param model
+     */
     private void fillMap(TicTacToeHolder holder, TicTacToe model) {
         putImage(holder.ib0, model.getMap().get(0));
         putImage(holder.ib1, model.getMap().get(1));
@@ -210,6 +268,11 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
         putImage(holder.ib8, model.getMap().get(8));
     }
 
+    /**
+     * Put a cross or a circle in a imagebutton
+     * @param ib
+     * @param field
+     */
     private void putImage(ImageButton ib, int field) {
         if (field == 1)
             ib.setImageResource(R.drawable.ic_circle);
@@ -218,6 +281,13 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
 
     }
 
+
+    /**
+     * Create the view holder and assign it to the layout item
+     * @param parent
+     * @param viewType
+     * @return the view holder
+     */
     @NonNull
     @Override
     public TicTacToeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -226,6 +296,9 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
         return new TicTacToeHolder(itemView);
     }
 
+    /**
+     * Create the viewholder of the recyclerView and create the components.
+     */
     public class TicTacToeHolder extends RecyclerView.ViewHolder {
 
         ImageButton ib0, ib1, ib2, ib3, ib4, ib5, ib6, ib7, ib8;

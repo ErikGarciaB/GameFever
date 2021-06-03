@@ -25,6 +25,12 @@ public class GameInvitationAdapter extends RecyclerView.Adapter<GameInvitationAd
     private ArrayList<TicTacToe> ttts;
     private OnItemClickInviteGameListener listenerGameListener;
 
+    /**
+     * Create the view holder and assign it to the layout item
+     * @param parent
+     * @param viewType
+     * @return the view holder
+     */
     @NonNull
     @Override
     public GameInvitationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,6 +39,11 @@ public class GameInvitationAdapter extends RecyclerView.Adapter<GameInvitationAd
         return new GameInvitationViewHolder(itemView);
     }
 
+    /**
+     * Bind the information of the invitation to layout's component
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull GameInvitationViewHolder holder, int position) {
         if (friendRelations != null){
@@ -51,6 +62,11 @@ public class GameInvitationAdapter extends RecyclerView.Adapter<GameInvitationAd
         }
     }
 
+    /**
+     * Search if the user is already on the game
+     * @param username The user to search
+     * @return true if is in one game.
+     */
     private boolean isAlreadyInvited(String username){
         boolean bool = false;
         for(TicTacToe ttt : ttts){
@@ -70,12 +86,20 @@ public class GameInvitationAdapter extends RecyclerView.Adapter<GameInvitationAd
         else return 0;
     }
 
+    /**
+     * Set of the friends and the tictactoes games
+     * @param friendRelations
+     * @param ttts
+     */
     public void setFriendRelations(ArrayList<FriendRelation> friendRelations, ArrayList<TicTacToe> ttts){
         this.friendRelations = friendRelations;
         this.ttts = ttts;
         notifyDataSetChanged();
     }
 
+    /**
+     * Create the viewholder of the recyclerView and create the components.
+     */
     public class GameInvitationViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvGameAlert, tvInvitationName;
@@ -87,6 +111,9 @@ public class GameInvitationAdapter extends RecyclerView.Adapter<GameInvitationAd
             tvInvitationName = itemView.findViewById(R.id.tvInvitationName);
             btInviteGame = itemView.findViewById(R.id.btInviteGame);
 
+            /**
+             * Create the listener of the button
+             */
             btInviteGame.setOnClickListener(v ->{
                 if (listenerGameListener != null){
                     listenerGameListener.onItemInviteGameListener(friendRelations.get(GameInvitationViewHolder.this.getAdapterPosition()));

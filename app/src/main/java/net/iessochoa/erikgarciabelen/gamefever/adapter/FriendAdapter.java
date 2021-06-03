@@ -25,13 +25,13 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
     private OnItemClickChatListener listenerChat;
     private OnItemClickExpandListener listenerExpand;
-    private OnItemClickInvitationListener listenerInvitation;
+    private OnItemClickDeleteListener listenerDelete;
 
     /**
-     * Create the viewHolder and is assigned to a layout
+     * Create the view holder and assign it to the layout item
      * @param parent
      * @param viewType
-     * @return
+     * @return the view holder
      */
     @NonNull
     @Override
@@ -69,8 +69,8 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     }
 
     /**
-     * Setter of the invitationList.
-     * @param invitationList
+     * Setter of the friend list
+     * @param friendList
      */
     public void setFriendList(ArrayList<FriendRelation> friendList){
         this.friendList = friendList;
@@ -79,12 +79,12 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
 
     /**
-     * Create the viewholder of the recyclerView and create the behaviour of the components.
+     * Create the viewholder of the recyclerView and create the components.
      */
     public class FriendViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvFriendName;
-        private Button btChat, btInvite;
+        private Button btChat, btDelete;
         private ImageView ivExpand;
         private LinearLayout vlOptions;
         private CardView cdFriend;
@@ -93,20 +93,23 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
             super(itemView);
             tvFriendName = itemView.findViewById(R.id.tvFriendName);
             btChat = itemView.findViewById(R.id.btChat);
-            btInvite = itemView.findViewById(R.id.btInvite);
+            btDelete = itemView.findViewById(R.id.btDelete);
             ivExpand = itemView.findViewById(R.id.ivExpand);
             vlOptions = itemView.findViewById(R.id.vlOptions);
             cdFriend = itemView.findViewById(R.id.cdFriend);
 
+            /**
+             * Create the listeners of the buttons
+             */
             btChat.setOnClickListener(v -> {
                 if (listenerChat != null){
                     listenerChat.onItemChatClick(friendList.get(FriendViewHolder.this.getAdapterPosition()));
                 }
             });
 
-            btInvite.setOnClickListener(v ->{
-                if (listenerInvitation != null){
-                    listenerInvitation.onItemInvitationClick(friendList.get(FriendViewHolder.this.getAdapterPosition()));
+            btDelete.setOnClickListener(v ->{
+                if (listenerDelete != null){
+                    listenerDelete.onItemInvitationClick(friendList.get(FriendViewHolder.this.getAdapterPosition()));
                 }
             });
 
@@ -122,7 +125,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
         void onItemExpandClick(LinearLayout vlOptions, ImageView ivExpand, CardView cdFriend);
     }
 
-    public interface OnItemClickInvitationListener {
+    public interface OnItemClickDeleteListener {
         void onItemInvitationClick(FriendRelation fr);
     }
 
@@ -131,15 +134,15 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     }
 
     // Setters of interfaces
-    public void setOnListenerChat(OnItemClickChatListener listenerChat) {
+    public void setOnChatListener(OnItemClickChatListener listenerChat) {
         this.listenerChat = listenerChat;
     }
 
-    public void setOnListenerExpand(OnItemClickExpandListener listenerExpand) {
+    public void setOnExpandListener(OnItemClickExpandListener listenerExpand) {
         this.listenerExpand = listenerExpand;
     }
 
-    public void setOnListenerInvitation(OnItemClickInvitationListener listenerInvitation) {
-        this.listenerInvitation = listenerInvitation;
+    public void setOnDeleteListener(OnItemClickDeleteListener listenerInvitation) {
+        this.listenerDelete = listenerInvitation;
     }
 }

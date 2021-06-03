@@ -1,12 +1,16 @@
 package net.iessochoa.erikgarciabelen.gamefever.ui.games;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,8 +28,9 @@ import net.iessochoa.erikgarciabelen.gamefever.R;
 import net.iessochoa.erikgarciabelen.gamefever.adapter.TicTacToeAdapter;
 import net.iessochoa.erikgarciabelen.gamefever.model.FirebaseContract;
 import net.iessochoa.erikgarciabelen.gamefever.model.TicTacToe;
+import net.iessochoa.erikgarciabelen.gamefever.ui.fragments.GamesFragment;
 
-import static net.iessochoa.erikgarciabelen.gamefever.ui.friends.FriendsFragment.EXTRA_FRIENDS;
+import static net.iessochoa.erikgarciabelen.gamefever.ui.fragments.FriendsFragment.EXTRA_FRIENDS;
 
 public class TicTacToeActivity extends AppCompatActivity {
 
@@ -44,18 +49,46 @@ public class TicTacToeActivity extends AppCompatActivity {
     // 2 = CROSS
     public static int PLAYERNUMBER = 0;
 
+    private static boolean CHAT_ENABLE = true;
     public static boolean MATCH_ENDED = false;
+    public static boolean MATCH_DRAWED = false;
     public static boolean YOUR_TURN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tic_tac_toe);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        /**
+         * Detect if the mobile has internet. If the mobile doesn't have internet the application shut down.
+         */
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.no_intenet_alert).setMessage(R.string.no_internet_message);
+            builder.setOnDismissListener(dialog -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            });
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            }).show();
+        }
         initializeComponents();
     }
 
 
+    /**
+     * Initialize the components
+     */
     private void initializeComponents() {
+        CHAT_ENABLE = true;
+        MATCH_DRAWED = false;
         ttt = getIntent().getExtras().getParcelable(GamesFragment.EXTRA_GAMES_TTT);
         primaryKey = ttt.getId();
         getPlayerNumber();
@@ -75,17 +108,28 @@ public class TicTacToeActivity extends AppCompatActivity {
 
         checkTurn(ttt);
 
+        /**
+         * Finish the activity
+         */
         btTicTacToeReturn.setOnClickListener(v -> finish());
 
+        /**
+         * Create and launch the chat activity of the game
+         */
         btGameChat.setOnClickListener(v -> {
-            Intent chatIntent = new Intent(this, GameChatActivity.class);
-            chatIntent.putExtra(EXTRA_FRIENDS, ttt);
-            startActivity(chatIntent);
+            if (CHAT_ENABLE) {
+                Intent chatIntent = new Intent(this, GameChatActivity.class);
+                chatIntent.putExtra(EXTRA_FRIENDS, ttt);
+                startActivity(chatIntent);
+            }
         });
         initializeTicTacToeAdapter();
     }
 
 
+    /**
+     * Create the adapter and get the information of the game
+     */
     private void initializeTicTacToeAdapter() {
         Query q = db.collection(FirebaseContract.TicTacToeGameEntry.COLLECTION_NAME)
                 .whereEqualTo(FirebaseContract.TicTacToeGameEntry.ID, primaryKey);
@@ -106,6 +150,14 @@ public class TicTacToeActivity extends AppCompatActivity {
         adapter.startListening();
 
         adapter.getSnapshots().addChangeEventListener(new ChangeEventListener() {
+            /**
+             * When the game is changed in the database, check if the turns. If is detected that the games is removed of the databases (winned)
+             * check if the user is the winner and is showed on the screen
+             * @param type
+             * @param snapshot
+             * @param newIndex
+             * @param oldIndex
+             */
             @Override
             public void onChildChanged(@NonNull ChangeEventType type, @NonNull DocumentSnapshot snapshot, int newIndex, int oldIndex) {
                 Log.e("TYPE", type.name());
@@ -115,6 +167,7 @@ public class TicTacToeActivity extends AppCompatActivity {
 
                 if (type.equals(ChangeEventType.REMOVED)) {
                     checkWinner(ttt);
+                    CHAT_ENABLE = false;
                 }
             }
 
@@ -131,6 +184,10 @@ public class TicTacToeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Check who is the winner.
+     * @param ttt
+     */
     private void checkWinner(TicTacToe ttt) {
         if (PLAYERNUMBER == 1 && ttt.getPlayer2Turn())
             tvTurn.setText(R.string.victory);
@@ -142,10 +199,14 @@ public class TicTacToeActivity extends AppCompatActivity {
         else if (PLAYERNUMBER == 2 && ttt.getPlayer2Turn())
             tvTurn.setText(R.string.defeat);
 
-        if (ttt.getMoveCounter() == 9)
+        if (MATCH_DRAWED)
             tvTurn.setText(R.string.draw);
     }
 
+    /**
+     * Check the turn of the user
+     * @param ttt
+     */
     private void checkTurn(TicTacToe ttt) {
 
         if (PLAYERNUMBER == 1) {
@@ -168,6 +229,9 @@ public class TicTacToeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Get who is the user on the game
+     */
     private void getPlayerNumber() {
         if (ttt.getPlayer1().getName().equals(auth.getCurrentUser().getDisplayName()))
             PLAYERNUMBER = 1;

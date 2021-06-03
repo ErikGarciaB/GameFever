@@ -1,7 +1,12 @@
 package net.iessochoa.erikgarciabelen.gamefever;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -9,15 +14,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import net.iessochoa.erikgarciabelen.gamefever.model.FirebaseContract;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +24,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() != NetworkInfo.State.CONNECTED) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.no_intenet_alert).setMessage(R.string.no_internet_message);
+            builder.setOnDismissListener(dialog -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            });
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                finish();
+            }).show();
+        }
+
         /**
          * Passing each menu ID as a set of Ids because each
          * menu should be considered as top level destinations.
@@ -39,17 +55,4 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        if (user != null){
-            Timestamp actualTime = Timestamp.now();
-            Map<String, Object> lastTimeConnected = new HashMap<>();
-            lastTimeConnected.put(FirebaseContract.UserEntry.LAST_TIME_CONNECTED, actualTime);
-            db.collection(FirebaseContract.UserEntry.COLLECTION_NAME).document(user.getDisplayName()).update(lastTimeConnected);
-        }
-    }
 }

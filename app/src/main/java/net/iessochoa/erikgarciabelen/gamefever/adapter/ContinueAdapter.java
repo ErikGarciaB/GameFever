@@ -25,6 +25,12 @@ public class ContinueAdapter extends RecyclerView.Adapter<ContinueAdapter.Contin
     private Context c;
 
 
+    /**
+     * Create the view holder and assign it to the layout item
+     * @param parent
+     * @param viewType
+     * @return the view holder
+     */
     @NonNull
     @Override
     public ContinueViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,6 +39,11 @@ public class ContinueAdapter extends RecyclerView.Adapter<ContinueAdapter.Contin
         return new ContinueViewHolder(itemView);
     }
 
+    /**
+     * Bind the information of the invitation to layout's component
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull ContinueViewHolder holder, int position) {
         if (!ttts.isEmpty()){
@@ -43,6 +54,10 @@ public class ContinueAdapter extends RecyclerView.Adapter<ContinueAdapter.Contin
         }
     }
 
+    /**
+     * Get the size of the games.
+     * @return The count.
+     */
     @Override
     public int getItemCount() {
         if (!ttts.isEmpty())
@@ -50,12 +65,20 @@ public class ContinueAdapter extends RecyclerView.Adapter<ContinueAdapter.Contin
         else return 0;
     }
 
+    /**
+     * Setter of the TicTacToe games and the activity context.
+     * @param ttts
+     * @param c
+     */
     public void setTtts(ArrayList<TicTacToe> ttts, Context c){
         this.ttts = ttts;
         this.c = c;
         notifyDataSetChanged();
     }
 
+    /**
+     * Create the viewholder of the recyclerView and create the components.
+     */
     public class ContinueViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvMatchName;
@@ -66,6 +89,9 @@ public class ContinueAdapter extends RecyclerView.Adapter<ContinueAdapter.Contin
             tvMatchName = itemView.findViewById(R.id.tvMatchName);
             btEnterGame = itemView.findViewById(R.id.btEnterGame);
 
+            /**
+             * Create the listeners of the buttons
+             */
             btEnterGame.setOnClickListener(v -> {
                 if (listenerEnterGameListener != null)
                     listenerEnterGameListener.onItemEnterGameListener(ttts.get(ContinueViewHolder.this.getAdapterPosition()));
