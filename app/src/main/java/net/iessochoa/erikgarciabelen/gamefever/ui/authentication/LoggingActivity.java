@@ -118,6 +118,7 @@ public class LoggingActivity extends AppCompatActivity{
     private void initializeMainApp(){
         Intent intent = new Intent(LoggingActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     /**
