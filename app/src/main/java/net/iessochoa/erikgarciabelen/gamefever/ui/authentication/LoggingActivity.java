@@ -73,7 +73,6 @@ public class LoggingActivity extends AppCompatActivity{
          */
         if (auth.getCurrentUser() != null) {
             initializeMainApp();
-            finish();
         }
 
         /**
