@@ -23,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import net.iessochoa.erikgarciabelen.gamefever.R;
 import net.iessochoa.erikgarciabelen.gamefever.model.Message;
 
+import java.text.SimpleDateFormat;
+
 public class ChatAdapter extends FirestoreRecyclerAdapter<Message, ChatAdapter.ChatHolder> {
 
     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -50,16 +52,27 @@ public class ChatAdapter extends FirestoreRecyclerAdapter<Message, ChatAdapter.C
     protected void onBindViewHolder(@NonNull ChatHolder holder, int position, @NonNull Message model) {
         String userName = auth.getCurrentUser().getDisplayName();
 
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
         if (model.getBody() != null) {
             if (model.getUsername().equals(userName)) {
-                String chatMessage = model.getBody();
+                String chatMessage;
+                if (model.getTime() == null){
+                    chatMessage = model.getBody();
+                } else {
+                    chatMessage = sdf.format(model.getTime()) + " " + model.getBody();
+                }
                 SpannableString message = new SpannableString(chatMessage);
                 message.setSpan(new BackgroundColorSpan(ContextCompat.getColor(context, R.color.app_dark_background)), 0, chatMessage.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.tvMessage.setGravity(Gravity.RIGHT);
                 holder.tvMessage.setText(message);
             } else{
-                String chatMessage = model.getBody();
+                String chatMessage;
+                if (model.getTime() == null){
+                    chatMessage = model.getBody();
+                } else {
+                    chatMessage = model.getBody() + " " + sdf.format(model.getTime());
+                }
                 SpannableString message = new SpannableString(chatMessage);
                 message.setSpan(new BackgroundColorSpan(ContextCompat.getColor(context, R.color.app_altDark_background)), 0, chatMessage.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 holder.tvMessage.setGravity(Gravity.LEFT);

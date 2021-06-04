@@ -35,6 +35,7 @@ public class OptionsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_options, container, false);
+
         initializeComponents(root);
 
         tvEmail.setText(auth.getCurrentUser().getEmail());
@@ -66,9 +67,18 @@ public class OptionsFragment extends Fragment {
         /**
          * Launch the history activity
          */
-        btHistory.setOnClickListener(v -> startActivity(new Intent(getActivity(), HistoryActivity.class)));
+        btHistory.setOnClickListener(v ->{
+            startActivity(new Intent(getActivity(), HistoryActivity.class));
 
-
+        });
+        /**
+         * Thread sleep to try stopping the user to change fragment quickly and making the app crash
+         */
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return root;
     }
 

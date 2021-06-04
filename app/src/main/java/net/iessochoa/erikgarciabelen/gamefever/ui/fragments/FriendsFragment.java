@@ -63,6 +63,7 @@ public class FriendsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_friends, container, false);
+
         initializeComponents(root);
 
         /**
@@ -89,6 +90,16 @@ public class FriendsFragment extends Fragment {
             invitationIntent.putExtra(EXTRA_INVITATION, userInvitations);
             startActivity(invitationIntent);
         });
+
+        /**
+         * Thread sleep to try stopping the user to change fragment quickly and making the app crash
+         */
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         return root;
     }
 

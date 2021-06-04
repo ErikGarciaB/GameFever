@@ -62,8 +62,8 @@ public class GamesFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_games, container, false);
 
-
         initializeComponents(root);
+
 
         /**
          * Start the ContinueGamesActivity
@@ -73,6 +73,14 @@ public class GamesFragment extends Fragment {
             startActivity(intent);
         });
 
+        /**
+         * Thread sleep to try stopping the user to change fragment quickly and making the app crash
+         */
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return root;
     }
 

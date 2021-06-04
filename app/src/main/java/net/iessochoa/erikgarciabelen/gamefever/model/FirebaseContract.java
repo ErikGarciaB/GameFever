@@ -12,6 +12,7 @@ public class FirebaseContract {
         public static final String PLAYER2 = "player2";
         public static final String PLAYER2TURN = "player2Turn";
         public static final String PLAYER2WIN = "player1Win";
+        public static final String DRAWGAME = "drawGame";
         public static final String ID = "id";
     }
 

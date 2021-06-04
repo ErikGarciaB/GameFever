@@ -20,6 +20,7 @@ public class TicTacToe implements Parcelable {
     private Boolean player1Win;
     private Boolean player2Turn;
     private Boolean player2Win;
+    private Boolean drawGame;
 
     public TicTacToe(){}
 
@@ -33,6 +34,7 @@ public class TicTacToe implements Parcelable {
         player1Win = false;
         player2Turn = false;
         player2Win = false;
+        drawGame = false;
     }
 
     private ArrayList<Integer> createMap (){
@@ -183,5 +185,13 @@ public class TicTacToe implements Parcelable {
 
     public void setPlayer2Win(Boolean player2Win) {
         this.player2Win = player2Win;
+    }
+
+    public Boolean getDrawGame() {
+        return drawGame;
+    }
+
+    public void setDrawGame(Boolean drawGame) {
+        this.drawGame = drawGame;
     }
 }

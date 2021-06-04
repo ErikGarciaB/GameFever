@@ -192,6 +192,9 @@ public class TicTacToeAdapter extends FirestoreRecyclerAdapter<TicTacToe, TicTac
 
         History h = new History(player1.getName(), player2.getName(), context.getString(R.string.tic_tac_toe), false, false);
 
+        db.collection(FirebaseContract.TicTacToeGameEntry.COLLECTION_NAME)
+                .document(model.getId()).update(FirebaseContract.TicTacToeGameEntry.DRAWGAME, true);
+
         db.collection(FirebaseContract.UserEntry.COLLECTION_NAME)
                 .document(player1.getName())
                 .collection(FirebaseContract.HistoryEntry.COLLECTION_NAME)

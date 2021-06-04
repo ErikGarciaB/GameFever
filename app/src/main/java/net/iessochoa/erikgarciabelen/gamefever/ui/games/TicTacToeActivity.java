@@ -199,7 +199,7 @@ public class TicTacToeActivity extends AppCompatActivity {
         else if (PLAYERNUMBER == 2 && ttt.getPlayer2Turn())
             tvTurn.setText(R.string.defeat);
 
-        if (MATCH_DRAWED)
+        if (ttt.getDrawGame())
             tvTurn.setText(R.string.draw);
     }
 

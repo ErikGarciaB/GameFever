@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import net.iessochoa.erikgarciabelen.gamefever.R;
 import net.iessochoa.erikgarciabelen.gamefever.model.History;
 
+import java.text.SimpleDateFormat;
+
 public class HistoryAdapter extends FirestoreRecyclerAdapter<History, HistoryAdapter.HistoryHolder> {
 
     private Context context;
@@ -43,8 +45,10 @@ public class HistoryAdapter extends FirestoreRecyclerAdapter<History, HistoryAda
 
         String rivalName = (model.getPlayerName1().equals(userName)) ? model.getPlayerName2() : model.getPlayerName1();
 
+        SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
         holder.tvHistoryGame.setText(String.format(context.getString(R.string.game_with), model.getGameName(), rivalName));
-        holder.tvDate.setText(model.getTime().toString());
+        holder.tvDate.setText(sfd.format(model.getTime()));
 
         if (model.getPlayerName1().equals(userName)) {
             if (model.getPlayer1Win())
